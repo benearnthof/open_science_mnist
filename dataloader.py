@@ -22,7 +22,7 @@ class TrainLoader(DataLoader):
                             batch_size=params.train_batch_size, 
                             shuffle=True)
 
-class TrainLoader(DataLoader):
+class TestLoader(DataLoader):
   """Helper Class to simplify loading of training data."""
   def __init__(self):
     super().__init__(dataset=AlbumentationsMnist(

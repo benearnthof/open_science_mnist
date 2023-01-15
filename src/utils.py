@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 class Parameters():
   """Helper Class to wrap up all training parameters"""
-  def __init__(self, train_batch_size=32, test_batch_size=1000, epochs=10, lr=1,
+  def __init__(self, train_batch_size=32, test_batch_size=1000, epochs=10, lr=0.01,
                gamma=0.7, cuda=False, log_interval=100, save_model=False):
     self.train_batch_size = train_batch_size
     self.test_batch_size = test_batch_size

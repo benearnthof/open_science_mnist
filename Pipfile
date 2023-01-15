@@ -8,6 +8,7 @@ requests = "*"
 torch = "*"
 torchvision = "*"
 argparse = "*"
+albumentations = "*"
 
 [dev-packages]
 

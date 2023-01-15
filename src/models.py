@@ -2,7 +2,7 @@
 # Convolutional Net with Dropout
 # Simple Fully connected Net
 
-
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 

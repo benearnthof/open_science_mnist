@@ -33,3 +33,15 @@ class TestLoader(DataLoader):
                               ), 
                             batch_size=params.test_batch_size, 
                             shuffle=True)
+
+class TrainLoaderNormalized(DataLoader):
+  """Helper Class to simplify loading of training data."""
+  def __init__(self):
+    super().__init__(dataset=AlbumentationsMnist(
+                              root='../data',
+                              train=True, 
+                              download=True,
+                              transform=normalize
+                              ), 
+                            batch_size=params.train_batch_size, 
+                            shuffle=True)

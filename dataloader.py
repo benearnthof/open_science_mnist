@@ -1,10 +1,10 @@
 # this file contains both the train and test loader classes needed 
 # to load the mnist dataset
+from transforms import rotate_and_flip, normalize
 from utils import Parameters
-from torchvision import datasets, transforms
+from dataset import AlbumentationsMnist
 from torchvision.datasets import MNIST
 from torch.utils.data import DataLoader
-# TODO: swap out torchvision transforms with data augmentation
 
 params = Parameters()
 
@@ -13,18 +13,23 @@ params = Parameters()
 class TrainLoader(DataLoader):
   """Helper Class to simplify loading of training data."""
   def __init__(self):
-    super().__init__(dataset=MNIST('../data', train=True, download=True,
-                              transform=transforms.Compose([
-                                transforms.ToTensor(),
-                                transforms.Normalize((0.1307,), (0.3081,))
-                              ])), batch_size=params.train_batch_size, shuffle=True)
+    super().__init__(dataset=AlbumentationsMnist(
+                              root='../data',
+                              train=True, 
+                              download=True,
+                              transform=rotate_and_flip
+                              ), 
+                            batch_size=params.train_batch_size, 
+                            shuffle=True)
 
-
-class TestLoader(DataLoader):
-  """Helper Class to simplify loading of test data."""
+class TrainLoader(DataLoader):
+  """Helper Class to simplify loading of training data."""
   def __init__(self):
-    super().__init__(dataset=MNIST('../data', train=False, download=True,
-                              transform=transforms.Compose([
-                                transforms.ToTensor(),
-                                transforms.Normalize((0.1307,), (0.3081,))
-                              ])), batch_size=params.test_batch_size, shuffle=True)
+    super().__init__(dataset=AlbumentationsMnist(
+                              root='../data',
+                              train=False, 
+                              download=True,
+                              transform=normalize
+                              ), 
+                            batch_size=params.test_batch_size, 
+                            shuffle=True)

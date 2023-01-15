@@ -9,6 +9,7 @@ torch = "*"
 torchvision = "*"
 argparse = "*"
 albumentations = "*"
+numpy = "*"
 
 [dev-packages]
 

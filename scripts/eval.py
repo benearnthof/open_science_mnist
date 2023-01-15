@@ -2,7 +2,7 @@
 import torch
 import torch.nn.functional as F
 import numpy as np
-from utils import Parameters
+from src.utils import Parameters
 
 params = Parameters()
 

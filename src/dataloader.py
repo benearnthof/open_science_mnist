@@ -1,8 +1,8 @@
 # this file contains both the train and test loader classes needed 
 # to load the mnist dataset
-from transforms import rotate_and_flip, normalize
-from utils import Parameters
-from dataset import AlbumentationsMnist
+from src.transforms import rotate_and_flip, normalize
+from src.utils import Parameters
+from src.dataset import AlbumentationsMnist
 from torchvision.datasets import MNIST
 from torch.utils.data import DataLoader
 

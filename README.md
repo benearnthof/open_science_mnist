@@ -23,4 +23,8 @@ Upload it to Colab:
 https://colab.research.google.com  
 And start executing the cells.  
 One of the first Cells will pull this repo to colab so you can edit the code on there and change the experiments and code to suit your needs.  
-Most of the code and cells have added comments, the pipenv setup is further specified in pipenv_readme.txt
+Most of the code and cells have added comments, the pipenv setup is further specified in pipenv_readme.txt  
+
+## How to compare results?  
+Screenshots of the sampling of data, and the training and performance of the convnet are included in the `images` folder.  
+If everything goes well they should match their respective cell outputs. 

@@ -15,3 +15,12 @@ The code should be able to be executed with:
 * Minimal Effort
 * Without any information beyond this simple readme
 * With the exact same result achieved here
+
+## How to use this repository?
+This repo is self contained, to replicate the experiments simply download the Jupyter Notebook from here:  
+https://github.com/benearnthof/open_science_mnist/blob/main/open_science_mnist.ipynb  
+Upload it to Colab:  
+https://colab.research.google.com  
+And start executing the cells.  
+One of the first Cells will pull this repo to colab so you can edit the code on there and change the experiments and code to suit your needs.  
+Most of the code and cells have added comments, the pipenv setup is further specified in pipenv_readme.txt

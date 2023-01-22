@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 requests = "*"
 torch = "~=1.12"
-torchvision = "0.13.0"
+torchvision = "==0.13.0"
 argparse = "*"
 albumentations = "*"
 numpy = "*"

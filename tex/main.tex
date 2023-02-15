@@ -1,0 +1,151 @@
+\documentclass{article}
+
+\usepackage[nonatbib, final]{neurips_2021}
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{biblatex}
+\DefineBibliographyStrings{english}{andothers={\&~al\adddot}}
+\addbibresource{bibliography.bib}
+
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+\usepackage[ngerman]{babel}
+\usepackage{csquotes}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{lipsum} 
+
+\title{Open Science in Statistics \& Machine Learning:\\
+A review of two articles on Meta-Research \\
+\& \\
+Reproducible ML with Colab, Pipenv \& Git}
+
+
+\author{
+  Benedikt Arnthof\thanks{\url{https://github.com/benearnthof/open_science_mnist}} \\
+  Department of Statistics\\
+  Ludwig-Maximilians-Universität München\\
+  Ludwigstr. 33 München \\
+  \texttt{benearnthof@hotmail.de} \\
+}
+
+
+\begin{document}
+\renewcommand{\figurename}{Fig.}
+\maketitle
+
+\begin{abstract}
+The advent of modern computing has grown the ability of scientists to conduct research and share their insights with eachother exponentially. While the sheer volume of studies being performed may seem daunting at a first glance, it does enable us to dig deeper and perform ``science on science'' to investigate the validity of certain claims and obtain a more complete overview of entire fields of research. This report will first present a brief introduction to Meta-Research based on \cite{metaresearch}, followed by a more thorough review of the paper ``Meta-Research: Lessons from a catalogue of 6674 brain recordings'' by \cite{brainrecordings} in section \ref{secmeta}. Section \ref{secmnist} will then discuss the benefits and potential drawbacks of implementing modern experiments in a fully reproducible, compact, and easily extendable fashion, and demonstrate how these insights were utilized to classify handwritten digits \cite{mnist} with simple artificial neural network classifiers. All code and supplementary material can be found in the repository linked below.
+\end{abstract}
+
+\section{Introduction}
+
+Modern tools for the collection and processing of data have revolutionized scientific research, not only by making large data sets available, but also by both facilitating the conduction of sophisticated analyses and the intercommunication of their results. While modern tools and the methods they made possible led to various breakthroughs in fields ranging from astrophysics to zoology, they also bring new sources of biases with them or may serve to perpetuate existing ones. Moreover, not every scientific field is as rigorous as pure mathematics. Empirical studies are a key driver for progress in most fields, but are never purely axiomatic. They are subject to human error at the best, and academic fraud at the worst, which is why it is of crucial importance to scrutinize scientific methods themselves and shed light upon the sheer volume of research that is published every year. Luckily, modern software also equips us with the tools necessary for such endeavours.\\
+The next section will give a brief introduction to Meta-Research and its importance, and review a case study performed by researchers from the University of Liverpool that will serve to highlight a selection of methods to unveil potential biases in neuroscience, and also showcase the importance of open source software coupled with open data, for making research both reproducible and accessible. Section \ref{secmnist} will then further underscore these points, by demonstrating how to implement an open science project with the help of Git \cite{git}, Pipenv \cite{pipenv} and Colab. \cite{colab}
+
+\section{On Meta-Research}\label{secmeta}
+\subsection{Meta-Research: Why research on research matters}
+
+While a broad summary of the benefits of Meta-Research has already been given in the section above, the paper ``Meta-Research: Why research on research matters'' \cite{metaresearch} highlights some other very important aspects, that can be condensed into six specific main claims. \\
+First it is mentioned, that the modern literary corpus researchers have at their disposal is vast. The authors mention that they text mined over 12 million different abstracts and more than 800.000 full-text articles for their own project, which is an enormous amount of text that requires modern, computer based methods to analyze in a meaningful manner. This also leads to their second point, which elaborates on results presented in \cite{biometa}, that while results are always exciting, the methods that led scientists to them are often left hidden in small print, making it hard to reproduce experiments. Meta-Research as a discipline is constantly evolving and must focus on both the evaluation of studies and the incentives behind them, and the methods that were used in order to obtain the results.\\
+The next point the paper raises is very important, yet often overlooked. The peer review process, that has been established as the default way of delivering constructive criticism to authors and filtering out untrustworthy results before they may be published in journals, is itself not flawless. Scientists seldom receive formal training in performing unbiased peer reviews and are often limited in the amount of time they are able to spend on reviewing a preprint. Further, the amount of people qualified to understand and review publications in highly specific fields is often also very limited, which either increases the potential amount of papers a single reviewer has to go through, or may lead to conflicts of interest when reviewers of competing research teams would be required to review their respective work. While some modern journals have set standards like a ``Double-Blind Peer Review'' process \cite{elsevier}, and projects like OpenReview \cite{openreview} aim to make the review process transparent for everyone it is still possible to \textit{recognize the lion by its claw} for papers that have been submitted for review by large and prestigious research teams. \\
+Next is an argument that is relevant for all fields, but of specific importance in the medical sciences. The amount of modern research produced is enormous, yet the data insights are derived from are rarely available in full, often fragmented, nontransparent and sometimes not available at all. In some cases this can, of course, not be avoided due to privacy laws or NDAs limiting the publication of data, yet projects like eleutherAI \cite{eleutherai} or LAION \cite{laion} showcase that even tremendously costly projects like training state of the art large language models or representation learning models can be replicated in an open source fashion. To underscore this point, they compared 441 buimedical journal articles published between 2000 and 2014 and found that only one (!) of these articles provided a full protocol coupled with the complete raw data necessary to replicate their results. Only four of the papers were replication studies, which also makes a heavy imbalance in the type of research published apparent. 16 of these studies did include data in a subsequent systematic review, but a stark discrepancy in the publication of results against the publication of data is still very evident.\\
+The fith point raised in \cite{metaresearch} relates more to the pressure on researchers and how the ``publish or perish'' mentality that is present in the majority of fields may lead scientists to cut corners in their research in order to be more time efficient and result in their findings being published. While outright fraud is rare in the scientific community, many scientists admit to taking such shortcuts. As stated in \cite{fanelli2009}, a meta-analysis that analyzed 21 different surveys, a pooled weighted average of 1.96\% of researchers admitted to have fabricated, falsified or modified data or results at least once, while up to 33.7\% admitted to other questionable research practices. Here one has to mention, that this report was already published in 2009, and the pace of modern research certainly has not slowed down since then. Such practices are very hard to eliminate fully, but the next section will discuss methods on how to detect some of them. \\
+The sixth core point raised by \cite{metaresearch} is that newly introduced, sophisticated measurement tools and techniques in various disciplines also bring new peculiar errors and biases with them. This expands the domain knowledge that is required to understand methods developed for certain analyses, thus shrinks the pool of peers that is available to review them, which makes transparent communication of methods and results of critical importance to conducting successful research. \\
+
+\subsection{Meta-Research: Lessons from a catalogue of 6674 brain recordings}
+
+The article ``Meta-Research: Lessons from a catalogue of 6674 brain recordings'' by Makin et al. \cite{brainrecordings} was originally \textit{bestowed upon} the british researchers by Covid-19 in early 2020, where all of their EEG experiments had to be halted. This break in their data acquisition allowed them to compile the ``SPN Catalogue'' and take a closer look at their own methods to see potentials areas of improvement and verify, that their own research does not fall victim to ``The Four Horsemen of the irreproducibility apocalypse.'' \\
+\subsubsection{The SPN Catalogue}
+Studies on visual symmetry shed light on how the brain processes visual information. While early methods, like the well known Rorschach test, focused more on psychoanalysis, modern approaches utilize either functional magnetic resonance imaging (fMRI) or electroencephalography (EEG) to concretely measure the response of the brain to visual stimuli. The research presented in \cite{brainrecordings} used the latter. To be more specific, their researchers presented subjects with images from a range of rotational symmetry and then used EEG to measure the response of the visual cortex to them. Example images are given in figure \ref{fig:symmetry}. 
+
+\begin{figure}[h]
+    \centering
+    %\includegraphics[]{}
+    \caption{A couple of images that were used in the experiments. The various degrees of symmetry present (or absent) in the images led to different levels of sustained posterior negativity. Taken from \cite{brainrecordings} page X.}
+    \label{fig:symmetry}
+\end{figure}
+
+The characteristic response that was measured in the experiments is the so called ``Sustained Posterior Negativity'' (SPN). The SPN is a signal that can be measured in the secondary visual cortex, the area surrounding the primary visual cortex (which obtains information directly from the nerves connecting to the retina). In a nutshell, (EEG) studies of human perception have found that amplitude at posterior electrodes is more negative for symmetrical patterns compared to asymmetrical patterns. This negativity lasts for hundreds of milliseconds. \cite{natureSPN}
+While the main results of this report are presented as a thorough investigation of the methods employed by the researchers, the contribution of preprocessing over 6600 brain recordings of more than 2200 participants should not be understated. Not only did they make all of the data available as multiple chunks that can easily be processed, they also provide other researchers with a precompiled MATLAB tool that can be used to visualize individual recordings. It should be noted that a precompiled tool may seem like a non-transparent way of providing a tool to reproduce analysis results, but the full code needed to compile the program itself can also be found on Github. \footnote{\url{https://github.com/JohnTyCa/The-SPN-Catalogue}}
+\subsubsection{The Four Horsemen of the irreproducibility apocalypse}
+The four main challenges (Horsemen) the authors of \cite{brainrecordings} highlight in their analysis both give a high-level overview over the ``Replication Crisis'' that struck many different modern fields of research for various reasons, and gives low-level insights into how they analyzed their own past publications in order to look for these pitfalls. \\
+The first, and probably most widespread, such pitfall is publication bias. As mentioned in the first part of this section, researchers in most scientific fields are under a lot of pressure to constantly publish results. On the surface this sounds like a good basis for competition and innovation, but this also brings certain biases with it. Even accounting for neutral reviewers, it is often easier to publish statistically significant results, compared to non-significant, but equally as important, results. This bias leads to systematic overestimation of effect sizes in meta-analyses building upon the primary results. For the EEG data this would lead to a measurable difference in unpublished SPNs compared to published SPNs. The authors of \cite{brainrecordings} mention, that to conduct their own meta-analysis they compared the data from studies that got published in journals to hold-out data that did not end up getting published but was still part of experiments they performed and kept in their ``file-drawer''. An initial two sample t-test with no assumption of equal variances yielded a significant mean difference of 0.354 microvolts $95\%CI:[0.162; 0.546]$ and the authors also note, that published SPNs tended to come from experiments with smaller sample sizes on average. They investigate these imbalances further and highlight, that the less accurate measures near the bottom of the funnel plots used to check for publication bias are skewed leftwards. This is a sign for publication bias, but no clear-cut confirmation of it. They note, that the funnel asymmetry is still significant for unpublished SPNs, which indicates that publication bias may not be the sole reason for its presence. Here, they refer to \cite{zwetsloot}, a theoretical study that compares the influence of different normalisation approaches, sample sizes and intervention effects on funnel plot asymmetry and notes that funnel plots are susceptible to distortions. An example funnel plot can be seen in figure \ref{fig:funnel} \\
+A third way to check for publication biases that is specific to the EEG data is to compare the ``P1'' \& ``N1'' points in the SPNs of the study groups. Here they found that these points were essentially identical, but also note that there existed a tendency for large SPNs to make it into the literature, while small SPNs tended to linger in the file drawer. As a last point it should also be noted, that the SPNs were from heterogenous studies, and as such one would not necessarily expect them to have the same mean amplitudes. This also perhaps allows a first point of critique, as a more detailed description of the differences would have served to underscore this point. 
+
+\begin{figure}[h]
+    \centering
+    %\includegraphics[]{}
+    \caption{A couple of funnel plots presented in \cite{brainrecordings} page X. They depict results from every study as a separate point, plotting their respective reported effect sizes against the reported standard errors.}
+    \label{fig:funnel}
+\end{figure}
+
+The second one of the ``Horsemen'' they discuss is low statistical power. Studies at the cusp of being significant (close to p=0.05 in most cases) have a statistical power of only around 0.5. The chance of successful replication in such a case is not close to 95\% as intuition may lead us to believe, but rather close to only 50\%. The article \cite{powerfailure} estimates, that the average statistical power in the field of neuroscience may be as low as 0.21 due to small sample sizes (based on 241 fMRI studies). It is very difficult to estimate effect sizes a priori, since one would need a corpus of work to gauge effect size without collecting data, which of course may itself be subject to publication bias. To circumvent this problem the authors here use polynomial regression to estimate the effect size for a given SPN amplitude. This leads them to the conclusion that, for a desired power of 0.8 one would need to collect data from 38 subjects or more. The mean sample size in their studies is however just 24, with a respective power of just 0.6. The weaker the SPN (or SPN difference) the more participants would be needed to obtain a desirable statistical power. More specifically, smaller, emerging fields of research may fall victim to being underpowered as initial experiments are often not too well funded, but usually increase in sample size for downstream experiments. Concluding their discussion on low statistical power, the authors also note that increasing the number of trials per participant may be a practical way to increase power with low relative cost. \\
+
+The next rider in the group of ``Horsemen'' is p-hacking. This refers to the practice of excluding certain data points from analyses in order to decrease p-values under a desired threshold. In the specific case of EEG experiments the effects one obtains may be sensitive to arbitrary analytical options such as the cluster of electrodes used in the analysis. Here a desperate researcher may exclude or include distinct electrodes to strengthen their hypotheses. To test for this scenario the researchers ran separate analyses on a selection of three distinct electrode clusters and compared the robustness of their results. \\
+First, One-sample t-tests were used to establish whether each SPN is significant under the choice of each respective cluster, then the results from each cluster were compared with eachother. If results changed from significant to non-significant the researchers took a closer look to determine why this may be the case and if the experiment may have fallen victim to p-hacking.\\
+More significant SPN modulations were obtained from the original electrode cluster compared to the two alternative configurations, but the relative differences were not large (38 vs 35 and 25). More interestingly, the two SPNs that crossed the 0.05 threshold after using different clusters were both contralateral SPNs, where only one half of the scalp surface is covered during the EEG, which made these SPNs more sensitive to electrode choice.\\
+Overall the researchers conclude that data preprocessing, which may also be used for p-hacking occurs too early in the measurement pipeline for the scientists to utilize for such purposes. \\
+
+Last but not least the study mentions ``HARKing'', a questionable research practice to adapt \textbf{h}ypotheses \textbf{a}fter \textbf{r}esults are \textbf{k}nown. They note that pre-registration of experiments, in the form of logging and transparent tracking of development, would be needed to combat this but since this study had been performed as a meta-study on experiments which had long been concluded this was no longer an option. Still, it would have been a nice showcase of the method to conduct strict pre-registration of the experiments performed in the meta-study. It should also be mentioned, that they do refer to research practices like ``Adversarial Collaboration'', where investigators committed to different theoretical views collaborate to test opposing predictions, which would have allowed the researchers to spot potential problems with their analysis and may have stimulated further results, but did not employ this strategy for this project. 
+
+\section{Reproducible Machine Learning}\label{secmnist}
+To showcase various different ways of making science openly accessible and reproducible, the second part of the seminar focused on implementing small example projects. The project summarized in this section was focused on utilizing a handful of very useful development tools for python in order to build a model that classifies the handwritten digits of the MNIST database \cite{mnist} and uses data augmentation techniques for training. 
+\subsection{Python \& Tools for Development}
+To implement a neural network classifier in Python one can pick from a couple of popular deep learning frameworks that provide users with all tools necessary to ingest data and build a training loop. For this project, PyTorch was chosen, as the very ``pythonic'' syntax allows other users to quickly grasp what is happening in the code and base classes like \texttt{DataLoaders}, \texttt{Datasets}, \texttt{Modules}, and even \texttt{Optimizers} can easily be extended to incorporate project specific demands. \\
+To track development, and account for quick changes and potentially necessary rollbacks a public repository on Github was used. \footnote{\url{https://github.com/benearnthof/open\_science\_mnist}}\\
+Version control alone does not guarantee that the code can be executed on every possible hardware combination however, this is why an interactive notebook that can be executed on Colaboratory \cite{colab}, a project by Google Research, was written, which allows other users to reproduce all of the experiments discussed in this section. Colaboratory, or Colab for short, allows everyone to execute arbitrary Python code in a browser of their choice. Underlying the python environment is a barebones linux virtual machine that allows for a handful of very useful commands to configure the python environment and also use Git. Colab also allows users to test their code on GPUs (for a limited time) which is very convenient for deep learning researchers as PyTorch provides users with near seamless CUDA integration which will dramatically speed up the embarrassingly  parallel matrix computations needed for the training of deep neural networks. A small potential drawback of Colab is the usage time limit for free users, so if projects require a lot of computing time to reproduce an offline solution may be required. \\
+One requirement of this project was to provide the users with two different versions of the code, one in which a deprecated version of a function was to be used, and another one in which an updated version of the respective function was to be used. This directly ties in with the PyPI package index and the need to provide users and developers with a way to track which specific versions of individual packages have been used in development. A practice that is still very widespread among researchers and developers, is to simply dump the packages that are loaded in a session into a \texttt{requirements.txt} file with commands like \texttt{pip freeze}. This comes with some drawbacks however, since this only allows for a semi-automatic way of tracking changes to the needed libraries and is [ADD INFO ABOUT PIPENV]. \\
+% proprietary software libraries and pipenv
+Finally, data augmentation techniques were to be added to the training pipeline, and for this task the Albumentations \cite{albumentations} package was chosen. Albumentations is a fast and flexible open source library that specializes on image augmentation techniques. The syntax to add new custom augmentations is very similar to that in `torchvision`, which ties in neatly with PyTorch. 
+Details and further specifics of the implementation are given in the section below.
+
+\subsection{Project \& Code Structring}
+Borrowing from the structure of other projects, the repository for this project was split into a root directory that contains the license, the readme file that was added to the repository upon instantiation and the \texttt{Pipfile} \& \texttt{Pipfile.lock} files that are generated by Pipenv to keep track of individual package versions and allow a user that clones the repository to simply run \texttt{pipenv install} after installing Pipenv and adding the \texttt{pipenv} command to their python path. These steps are also performed in the Jupyter Notebook for potential users to see, but the documentation provided by Pipenv is also very helpful and easy to navigate. \\
+The rest of the repository is split up into different folders. A data folder, that was added for the sake of completeness, but is not strictly needed here since the MNIST database is already available through the torchvision module as part of PyTorch. An images folder which contains screenshots of the model training and evaluation so reviewers can compare results at a glance. A scripts folder that contains evaluation and training loops, and a source directory which contains the majority of the code. Each file in the source directory only contains code for one specific part of the project. This allows new users to quickly understand the purpose of code they are looking at, and also makes the repository easily extendable. \\
+To add custom data augmentation to the training procedure of a model one may observe that the \texttt{\_\_getitem\_\_} method of the \texttt{Dataset} class provided in the data utilities of PyTorch allows users to specify a transform, and if so, automatically applies the transform to the item that is loaded. Thus the only two changes that are needed to use Albumentation transforms instead of the builtin torchvision transforms. First, a new dataset class that inherits from the \texttt{MNIST} dataset available in the torchvision datasets module is created, in which a custom \texttt{\_\_getitem\_\_} method is added that will allow the usage of Albumentation transforms. Second, custom \texttt{DataLoaders} are created that subclass the standard \texttt{DataLoader} of PyTorch and pass the custom dataset class created in the step above to their super class upon instantiation. The data augmentation transforms themselves follow the ``composing'' syntax also used in torchvision transforms and simply couple all desired image transformations in a list. The transformations that should be investigated in this project were a random combination of horizontal flipping and rotation by 90 degrees, but since the original values in the single channel images of the MNIST database range from 0 to 255, a normalization step was also performed. \\
+The network architectures used are very simple. To exploit the 2D structure present in the images two convolutional layers with kernel size 3 and stride 1 were coupled with two dropout layers for regularization. To obtain predictions ranging from 0 to 9 two fully connected layers were used at the end of the network. Here rectified linear units (ReLU) were used as activation functions, but since the dataset has a very small resolution and the network is so compact pretty much any popular activation function may be chosen. Finally, all models were trained with the standard stochastic gradient descent optimizer on a part of the dataset, and evaluated on a separate part of the dataset which was reserved to estimate out of sample performance of the models. Both the basic, and the augmented model were trained for 10 epochs.\\
+In order to handle updates or manage deprecated code branching was used. Since Colab allows users to use git it is possible to switch between different branches with almost no overhead. To make sure that the correct version of each package is available in colab only the pipenv setup has to be repeated after starting a new python session. With the command \texttt{pipenv graph} users can then manually verify the dependency tree of the specific branch. \\
+Training the basic convolutional model with no added augmentations resulted in an overall test accuracy of 98.7\%. The network that was trained on augmented images only achieved a test accuracy of 96.58\%. These results may seem counterintuitive at first, but upon closer inspection it can be observed, that the augmented model struggles most with the digit classes ``2'' \& ``5'' and ``6'' \& ``9'' which seems logical since these classes exhibit rotational symmetry, which causes horizontal flipping to ``swap'' class members from one class to another.
+
+\subsection{Notes on Random Seeds \& Distributed Data}
+To make the project 100\% reproducible three distinct random seeds have to be set. First, Pythons internal random seed, which is responsible for the shuffling that happens while sampling from the data during training. Next, the random seed of \texttt{numpy} has to be set, to make sure the chosen augmentations are applied in a deterministic way. Finally the seed for the PyTorch random number generator also has to be set to ensure that both model parameter initializations and the path of the stochastic optimizer can be reproduced in a deterministic manner. \\
+The usage of convolutional layers on GPUs may require a handful of adjustments, since these layers use CUDA kernels for efficient execution on specific hardware, which may cause other non-deterministic behaviour. For more information on this please refer to the PyTorch documentation linked below. \footnote{\url{https://pytorch.org/docs/stable/notes/randomness.html}}
+
+\section{Reproducing of Project: Docker}
+
+
+
+\section{Discussion}
+% Add notes on how to deploy data & models
+% add note on the importance of tests for development in a team
+% Add musings about very large language models & proprietary data
+
+
+\section{Conclusion}
+
+
+\section{Acknowledgment}
+
+
+\newpage
+\section{References}
+
+
+{
+\small
+\printbibliography[title=Literature]
+}
+
+\appendix
+
+\section{Appendix}\label{Appendix}
+
+
+
+\end{document}
